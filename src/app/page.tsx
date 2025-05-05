@@ -9,6 +9,8 @@ import { TodaysMoodCard } from '@/components/mood/TodaysMoodCard'
 import { TodaysReflectionCard } from '@/components/mood/TodaysReflectionCard'
 import { TodaysSleepCard } from '@/components/mood/TodaysSleepCard'
 import { useEffect, useState, useMemo } from 'react'
+import Image from 'next/image'
+import { Navbar } from '@/components/layout/Navbar'
 
 // Define the type for a mood entry
 type MoodEntry = {
@@ -52,14 +54,7 @@ const moodConfig: Record<string, { color: string; icon: string; height: number }
 export default function Home() {
   const [currentDate, setCurrentDate] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [moodEntries, setMoodEntries] = useState<MoodEntry[]>([
-    // Initial mock data - using the original white icons for trend bars
-    { date: new Date(2023, 3, 5), mood: 'Sad', color: '#B8B1FF', icon: '/assets/images/icon-sad-white.svg', height: 104, tags: ['Down', 'Tired'] },
-    { date: new Date(2023, 3, 7), mood: 'Happy', color: '#88FF7B', icon: '/assets/images/icon-happy-white.svg', height: 214, sleep: '7-8 hours', tags: ['Optimistic', 'Content'] },
-    { date: new Date(2023, 3, 9), mood: 'Neutral', color: '#85CAFF', icon: '/assets/images/icon-neutral-white.svg', height: 165, journal: 'Average day at work, nothing special.', sleep: '5-6 hours' },
-    { date: new Date(2023, 3, 11), mood: 'Very Happy', color: '#FFC97C', icon: '/assets/images/icon-happy-white.svg', height: 263, journal: 'Had a great day today! Went hiking with friends.', sleep: '9+ hours', tags: ['Joyful', 'Excited', 'Grateful'] },
-    { date: new Date(2023, 3, 13), mood: 'Sad', color: '#FF9B99', icon: '/assets/images/icon-sad-white.svg', height: 104, journal: 'Feeling a bit down today. Need to rest.', sleep: '3-4 hours', tags: ['Tired', 'Stressed'] },
-  ])
+  const [moodEntries, setMoodEntries] = useState<MoodEntry[]>([])
 
   // Check if user has already logged mood today
   const todaysMood = useMemo(() => {
@@ -78,7 +73,7 @@ export default function Home() {
     if (moodEntries.length < 5) {
       return { 
         mood: null,
-        message: "Keep tracking!", 
+        message: "Neutral", 
         description: "Log 5 check-ins to see your average mood.",
         color: '#85CAFF', // Default blue color
         icon: '/assets/images/icon-neutral-white.svg',
@@ -96,7 +91,17 @@ export default function Home() {
       'Very Sad': 1
     };
     
+    console.log('Recent mood entries (newest first):', 
+      recentEntries.map(entry => ({
+        date: entry.date.toLocaleDateString(),
+        mood: entry.mood,
+        value: moodValues[entry.mood as keyof typeof moodValues]
+      }))
+    );
+    
     const avgValue = recentEntries.reduce((sum, entry) => sum + moodValues[entry.mood as keyof typeof moodValues], 0) / recentEntries.length;
+    console.log('Average value calculated:', avgValue.toFixed(2));
+    
     let avgMood = 'Neutral';
     
     if (avgValue >= 4.5) avgMood = 'Very Happy';
@@ -104,6 +109,8 @@ export default function Home() {
     else if (avgValue >= 2.5) avgMood = 'Neutral';
     else if (avgValue >= 1.5) avgMood = 'Sad';
     else avgMood = 'Very Sad';
+
+    console.log('Final avgMood selected:', avgMood);
 
     // Determine comparison with previous moods
     let comparison: 'increase' | 'same' | 'decrease' = 'same';
@@ -151,7 +158,7 @@ export default function Home() {
     if (entriesWithSleep.length < 5) {
       return {
         sleep: null,
-        message: "Not enough data yet!",
+        message: "5-6 Hours",
         description: "Track 5 nights to view average sleep.",
         color: '#4865DB', // Default blue color
         icon: '/assets/images/icon-sleep.svg',
@@ -221,6 +228,8 @@ export default function Home() {
   const avgMood = getAverageMood();
   const avgSleep = getAverageSleep();
 
+  console.log(`Average Mood - mood: ${avgMood.mood}, color: ${avgMood.mood ? moodConfig[avgMood.mood]?.color : 'null'}`);
+
   useEffect(() => {
     const updateDate = () => {
       const date = new Date()
@@ -272,81 +281,86 @@ export default function Home() {
   }
 
   return (
-    <main className="flex flex-col items-center gap-[64px] pb-[80px] w-[375px] md:w-[768px] lg:w-[1440px] mx-auto">
-      <div className="flex flex-col items-center gap-4 w-full px-4">
-        <p className="w-full text-[24px] leading-[130%] font-bold text-blue-600 text-center font-reddit tracking-[-0.3px]">
-          Hello, Lisa!
-        </p>
-        <h1 className="w-full text-[46px] lg:text-[52px] leading-[120%] font-bold text-neutral-900 text-center font-reddit tracking-[-2px] lg:tracking-normal">
-          How are you feeling today?
-        </h1>
-        <p className="w-full font-reddit text-[18px] leading-[120%] font-medium text-neutral-600 text-center">
-          {currentDate}
-        </p>
-      </div>
-      <Button 
-        className="font-reddit text-[20px] font-semibold leading-[140%] text-neutral-0"
-        onClick={() => setIsModalOpen(true)}
-      >
-        {getButtonText()}
-      </Button>
+    <>
+      {/* Use the Navbar component with popover functionality */}
+      <Navbar />
       
-      {/* Today's mood card and stats container wrapper */}
-      <div className="flex flex-col w-full max-w-[1170px] px-4">
-        {/* Today's mood card - only visible when mood is logged for today */}
-        {todaysMood && (
-          <div className="flex flex-col lg:flex-row w-full gap-[20px] mb-[20px] lg:gap-[16px] lg:mb-[16px]">
-            <TodaysMoodCard
-              mood={todaysMood.mood}
-              moodIndex={todaysMoodIndex}
-            />
-            <div className="flex flex-col w-full lg:flex-1 gap-[20px] lg:gap-4">
-              {todaysMood.sleep && (
-                <TodaysSleepCard sleep={todaysMood.sleep} />
-              )}
-              {todaysMood.journal && (
-                <TodaysReflectionCard reflection={todaysMood.journal} />
-              )}
+      <main className="flex flex-col items-center gap-[64px] pb-[80px] w-[375px] md:w-[768px] lg:w-[1440px] mx-auto">
+        <div className="flex flex-col items-center gap-4 w-full px-4 border-none">
+          <p className="w-full text-[24px] leading-[130%] font-bold text-blue-600 text-center font-reddit tracking-[-0.3px] border-none">
+            Hello, Lisa!
+          </p>
+          <h1 className="w-full text-[46px] lg:text-[52px] leading-[120%] font-bold text-neutral-900 text-center font-reddit tracking-[-2px] lg:tracking-normal">
+            How are you feeling today?
+          </h1>
+          <p className="w-full font-reddit text-[18px] leading-[120%] font-medium text-neutral-600 text-center">
+            {currentDate}
+          </p>
+        </div>
+        <Button 
+          className="font-reddit text-[20px] font-semibold leading-[140%] text-neutral-0"
+          onClick={() => setIsModalOpen(true)}
+        >
+          {getButtonText()}
+        </Button>
+        
+        {/* Today's mood card and stats container wrapper */}
+        <div className="flex flex-col w-full max-w-[1170px] px-4">
+          {/* Today's mood card - only visible when mood is logged for today */}
+          {todaysMood && (
+            <div className="flex flex-col lg:flex-row w-full gap-[20px] mb-[20px] lg:gap-[16px] lg:mb-[16px]">
+              <TodaysMoodCard
+                mood={todaysMood.mood}
+                moodIndex={todaysMoodIndex}
+              />
+              <div className="flex flex-col w-full lg:flex-1 gap-[20px] lg:gap-4">
+                {todaysMood.sleep && (
+                  <TodaysSleepCard sleep={todaysMood.sleep} />
+                )}
+                {todaysMood.journal && (
+                  <TodaysReflectionCard reflection={todaysMood.journal} />
+                )}
+              </div>
+            </div>
+          )}
+          
+          <div className="flex flex-col lg:flex-row w-full gap-[20px] lg:gap-[32px]">
+            <div className="flex flex-col gap-[20px] w-full lg:gap-[32px] lg:w-auto">
+              <StatsContainer>
+                <AverageMoodCard
+                  title="Average Mood"
+                  subtitle="Last 5 Check-ins"
+                  message={avgMood.message}
+                  description={avgMood.description}
+                  color={avgMood.color}
+                  icon={avgMood.icon}
+                  comparison={avgMood.comparison}
+                  variant="mood"
+                />
+                <AverageMoodCard
+                  title="Average Sleep"
+                  subtitle="Last 5 Check-ins"
+                  message={avgSleep.message}
+                  description={avgSleep.description}
+                  color={avgSleep.color}
+                  icon={avgSleep.icon}
+                  comparison={avgSleep.comparison}
+                />
+              </StatsContainer>
+            </div>
+            <div className="w-full lg:flex-1 overflow-x-auto">
+              <TrendsSection moodData={moodEntries} />
             </div>
           </div>
-        )}
-        
-        <div className="flex flex-col lg:flex-row w-full gap-[20px] lg:gap-[32px]">
-          <div className="flex flex-col gap-[20px] w-full lg:gap-[32px] lg:w-auto">
-            <StatsContainer>
-              <AverageMoodCard
-                title="Average Mood"
-                subtitle="Last 5 Check-ins"
-                message={avgMood.message}
-                description={avgMood.description}
-                color={avgMood.color}
-                icon={avgMood.icon}
-                comparison={avgMood.comparison}
-                variant="mood"
-              />
-              <AverageMoodCard
-                title="Average Sleep"
-                subtitle="Last 5 Check-ins"
-                message={avgSleep.message}
-                description={avgSleep.description}
-                color={avgSleep.color}
-                icon={avgSleep.icon}
-                comparison={avgSleep.comparison}
-              />
-            </StatsContainer>
-          </div>
-          <div className="w-full lg:flex-1 overflow-x-auto">
-            <TrendsSection moodData={moodEntries} />
-          </div>
         </div>
-      </div>
-      
-      <MoodLogModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleLogMood}
-        initialMood={todaysMood?.mood}
-      />
-    </main>
+        
+        <MoodLogModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleLogMood}
+          initialMood={todaysMood?.mood}
+        />
+      </main>
+    </>
   )
 }

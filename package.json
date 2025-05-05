@@ -1,22 +1,12 @@
 {
-  "name": "nextjs-starter",
+  "name": "moody",
   "version": "1.0.0",
   "private": true,
-  "description": "A Next.js starter that includes all you need to build amazing projects",
-  "author": "abel chang<cwuyiqing@gmail.com>",
+  "description": "A mood tracking application to help users record and visualize their emotional wellbeing",
   "license": "MIT",
-  "keywords": [
-    "nextjs",
-    "starter",
-    "typescript"
-  ],
   "scripts": {
     "build": "next build",
     "dev": "next dev --turbo",
-    "export": "next build && next export",
-    "format": "prettier --ignore-path .gitignore \"src/**/*.+(ts|js|tsx)\" --write",
-    "lint": "eslint --ignore-pattern .gitignore --fix",
-    "prepare": "husky",
     "start": "next start"
   },
   "dependencies": {
@@ -33,28 +23,14 @@
     "zustand": "4.5.0"
   },
   "devDependencies": {
-    "@emotion/react": "11.11.3",
-    "@emotion/styled": "11.11.0",
-    "@iconify-icon/react": "1.0.8",
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
-    "@typescript-eslint/eslint-plugin": "6.19.0",
-    "@typescript-eslint/parser": "6.19.0",
     "autoprefixer": "10.4.17",
     "eslint": "8.56.0",
     "eslint-config-next": "14.1.0",
-    "husky": "8.0.3",
-    "lint-staged": "15.2.0",
     "postcss": "8.4.33",
-    "prettier": "3.2.4",
     "tailwindcss": "3.4.1",
     "typescript": "5.3.3"
-  },
-  "lint-staged": {
-    "./**/*.{ts,js,jsx,tsx}": [
-      "pnpm run lint",
-      "pnpm run format"
-    ]
   }
 }

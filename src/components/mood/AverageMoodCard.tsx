@@ -26,6 +26,8 @@ export function AverageMoodCard({
   const textColor = isDarkBackground ? 'text-neutral-0' : 'text-neutral-900';
   const arrowFill = isDarkBackground ? "#FFFFFF" : "#21214D";
 
+  console.log(`AverageMoodCard - title: ${title}, message: ${message}, variant: ${variant}, color: ${color}`);
+
   // Comparison icon SVG paths based on trend
   const getComparisonArrow = (comp: 'increase' | 'same' | 'decrease', fill: string) => {
     // Pointing diagonally up-right for increase
@@ -60,8 +62,6 @@ export function AverageMoodCard({
     'same': 'Same as the previous 5 check-ins',
     'decrease': 'Decrease from the previous 5 check-ins'
   }[comparison];
-
-  console.log('AverageMoodCard props:', { title, variant, comparison, color }); // Debug output
 
   if (variant === 'mood') {
     return (

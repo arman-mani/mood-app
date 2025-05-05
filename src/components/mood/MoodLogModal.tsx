@@ -355,13 +355,59 @@ export function MoodLogModal({ isOpen, onClose, onSubmit, initialMood }: MoodLog
           {currentStep === 4 && renderStepFour()}
         </div>
         
-        <Button 
-          onClick={handleContinue}
-          disabled={currentStep === 1 ? !moodData.mood : false}
-          className="w-full font-reddit text-[20px] font-semibold leading-[140%] mt-4 text-center flex justify-center"
-        >
-          {currentStep === 4 ? 'Submit' : 'Continue'}
-        </Button>
+        <div className="flex flex-col gap-2">
+          {/* Error Messages */}
+          {(currentStep === 1 && !moodData.mood) && (
+            <div className="flex items-center gap-2 mb-1">
+              <Image 
+                src="/assets/images/info-circle.svg"
+                alt="Info"
+                width={16}
+                height={16}
+              />
+              <span className="font-reddit text-[15px] font-normal leading-[140%] tracking-[-0.3px] text-neutral-600">
+                Please select a mood before continuing.
+              </span>
+            </div>
+          )}
+          {(currentStep === 2 && moodData.tags.length >= 3) && (
+            <div className="flex items-center gap-2 mb-1">
+              <Image 
+                src="/assets/images/info-circle.svg"
+                alt="Info"
+                width={16}
+                height={16}
+              />
+              <span className="font-reddit text-[15px] font-normal leading-[140%] tracking-[-0.3px] text-neutral-600">
+                You can only select a maximum of 3 tags.
+              </span>
+            </div>
+          )}
+          {(currentStep === 3 && !moodData.journal.trim()) && (
+            <div className="flex items-center gap-2 mb-1">
+              <Image 
+                src="/assets/images/info-circle.svg"
+                alt="Info"
+                width={16}
+                height={16}
+              />
+              <span className="font-reddit text-[15px] font-normal leading-[140%] tracking-[-0.3px] text-neutral-600">
+                Please write a few words about your day before continuing.
+              </span>
+            </div>
+          )}
+          
+          <Button 
+            onClick={handleContinue}
+            disabled={
+              (currentStep === 1 && !moodData.mood) || 
+              (currentStep === 3 && !moodData.journal.trim())
+            }
+            className="w-full font-reddit text-[20px] font-semibold leading-[140%] text-center flex justify-center"
+          >
+            {currentStep === 4 ? 'Submit' : 'Continue'}
+          </Button>
+        </div>
       </div>
     </div>
   );

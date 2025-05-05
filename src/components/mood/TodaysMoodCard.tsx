@@ -21,19 +21,45 @@ export function TodaysMoodCard({ mood, moodIndex }: TodaysMoodCardProps) {
 
   // Get a random quote based on mood
   useEffect(() => {
+    console.log("TodaysMoodCard - Current moodIndex:", moodIndex);
+    
     if (moodIndex === null) return;
     
     try {
       // Convert moodIndex to string key for quotes object
       const moodKey = moodIndex.toString();
+      console.log("TodaysMoodCard - Looking for quotes with key:", moodKey);
       
       // Get quotes array for this mood
-      const quotes = quotesData.moodQuotes[moodKey as keyof typeof quotesData.moodQuotes];
+      const quotesForMood = quotesData.moodQuotes[moodKey as keyof typeof quotesData.moodQuotes];
+      console.log("TodaysMoodCard - Quotes found:", quotesForMood);
       
-      if (quotes && quotes.length > 0) {
+      if (quotesForMood && quotesForMood.length > 0) {
         // Select a random quote
-        const randomIndex = Math.floor(Math.random() * quotes.length);
-        setQuote(quotes[randomIndex]);
+        const randomIndex = Math.floor(Math.random() * quotesForMood.length);
+        const selectedQuote = quotesForMood[randomIndex];
+        console.log("TodaysMoodCard - Selected quote:", selectedQuote);
+        setQuote(selectedQuote);
+      } else {
+        console.log("TodaysMoodCard - No quotes found for moodKey:", moodKey);
+        
+        // Hardcoded fallback quotes based on mood index
+        if (moodIndex === 0) { // Neutral mood
+          const neutralQuotes = [
+            "A calm mind can find opportunity in every moment.",
+            "Sometimes the greatest triumph is simply finding peace.",
+            "Take a moment to breathe; every breath is a fresh start.",
+            "Even an ordinary day can hold a pleasant surprise.",
+            "Balance isn't found, it's created."
+          ];
+          const randomNeutralQuote = neutralQuotes[Math.floor(Math.random() * neutralQuotes.length)];
+          console.log("TodaysMoodCard - Using fallback neutral quote:", randomNeutralQuote);
+          setQuote(randomNeutralQuote);
+        } else if (moodIndex > 0) { // Happy moods
+          setQuote("When your heart is full, share your light with the world.");
+        } else { // Sad moods
+          setQuote("This moment is tough, but you've overcome challenges before.");
+        }
       }
     } catch (error) {
       console.error('Error getting quote:', error);
@@ -80,7 +106,7 @@ export function TodaysMoodCard({ mood, moodIndex }: TodaysMoodCardProps) {
             height={30}
           />
           <p className="font-reddit text-[18px] leading-[150%] text-[#57577B] italic text-center">
-            "{quote}"
+            "{quote || "A calm mind can find opportunity in every moment."}"
           </p>
         </div>
       </div>
@@ -109,7 +135,7 @@ export function TodaysMoodCard({ mood, moodIndex }: TodaysMoodCardProps) {
             className="mb-2"
           />
           <p className="font-reddit text-[18px] leading-[150%] text-[#57577B] italic">
-            "{quote}"
+            "{quote || "A calm mind can find opportunity in every moment."}"
           </p>
         </div>
         
