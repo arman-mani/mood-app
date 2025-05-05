@@ -9,7 +9,7 @@ export function TodaysReflectionCard({ reflection }: TodaysReflectionCardProps) 
   if (!reflection) return null;
 
   return (
-    <div className="flex flex-col items-start gap-4 p-5 w-full rounded-[16px] border border-[#E0E6FA] bg-white mb-0 h-auto lg:h-[227px]">
+    <div className="flex flex-col items-start gap-4 p-5 w-full rounded-[16px] border border-[#E0E6FA] bg-white mb-0 h-auto lg:h-[227px]" style={{ minWidth: 0 }}>
       <div className="flex items-center gap-2">
         <Image
           src="/assets/images/icon-reflection.svg"
@@ -22,8 +22,16 @@ export function TodaysReflectionCard({ reflection }: TodaysReflectionCardProps) 
         </h2>
       </div>
       
-      <div className="flex-1 w-full overflow-y-auto max-h-[200px] lg:max-h-[150px]">
-        <p className="text-[#21214D] font-reddit text-[18px] font-medium leading-[120%] m-0 break-words whitespace-normal">
+      <div className="flex-1 w-full overflow-y-auto max-h-[200px] lg:max-h-[150px]" style={{ minWidth: 0 }}>
+        <p 
+          className="text-[#21214D] font-reddit text-[18px] font-medium leading-[120%] m-0"
+          style={{ 
+            overflowWrap: 'break-word', 
+            wordBreak: 'break-word',
+            hyphens: 'auto',
+            maxWidth: '100%'
+          }}
+        >
           {reflection}
         </p>
       </div>

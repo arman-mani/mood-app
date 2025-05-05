@@ -3,10 +3,11 @@
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
 import { ProfilePopover } from '@/components/layout/ProfilePopover';
+import { useUser } from '@/contexts/UserContext';
 
 export function Navbar() {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [userImage, setUserImage] = useState('/assets/images/avatar-lisa.jpg');
+  const { userImage } = useUser();
   const popoverRef = useRef<HTMLDivElement>(null);
 
   // Handle clicks outside the popover to close it
@@ -31,14 +32,9 @@ export function Navbar() {
     setIsPopoverOpen(prev => !prev);
   };
 
-  // Updates the user image when changed in settings
-  const handleUserImageUpdate = (image: string) => {
-    setUserImage(image);
-  };
-
   return (
     <nav className="w-full py-10">
-      <div className="mx-auto w-[343px] md:w-[704px] lg:w-[1138px] flex justify-between items-center">
+      <div className="mx-auto w-full max-w-[343px] md:max-w-[704px] lg:max-w-[1138px] flex justify-between items-center px-4">
         {/* Logo */}
         <div className="flex items-center gap-2 cursor-pointer">
           <Image 
@@ -86,7 +82,7 @@ export function Navbar() {
           
           <ProfilePopover 
             isOpen={isPopoverOpen} 
-            onUserImageUpdate={handleUserImageUpdate}
+            onUserImageUpdate={() => {}} // This is no longer needed as we're using context
           />
         </div>
       </div>

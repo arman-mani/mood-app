@@ -2,6 +2,8 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import type { ReactNode } from 'react'
+import { UserProvider } from '@/contexts/UserContext'
+import { AuthProvider } from '@/contexts/AuthContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -31,7 +33,11 @@ export default function RootLayout({
         <link rel="alternate icon" href="/assets/images/favicon-32x32.png" type="image/png" />
       </head>
       <body className={`${inter.className} min-h-screen bg-gradient-custom`}>
-        {children}
+        <AuthProvider>
+          <UserProvider>
+            {children}
+          </UserProvider>
+        </AuthProvider>
       </body>
     </html>
   )

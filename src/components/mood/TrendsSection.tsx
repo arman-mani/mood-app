@@ -15,6 +15,24 @@ interface MoodEntry {
   tags?: string[];
 }
 
+type ProcessedMoodDataWithoutEntry = {
+  height: number;
+  color: string;
+  icon: string;
+  show: false;
+  data: null;
+}
+
+type ProcessedMoodDataWithEntry = {
+  height: number;
+  color: string;
+  icon: string;
+  show: true;
+  data: MoodEntry;
+}
+
+type ProcessedMoodData = ProcessedMoodDataWithoutEntry | ProcessedMoodDataWithEntry;
+
 interface TrendsSectionProps {
   moodData: MoodEntry[];
 }
@@ -36,12 +54,12 @@ export function TrendsSection({ moodData }: TrendsSectionProps) {
   // Process the mood data to align with the dates
   const processedMoodData = useMemo(() => {
     // Create an array with placeholders for each date
-    const result = Array(11).fill(null).map(() => ({
+    const result: ProcessedMoodData[] = Array(11).fill(null).map(() => ({
       height: 0,
       color: '',
       icon: '',
       show: false,
-      data: null as MoodEntry | null
+      data: null
     }))
     
     // Map the mood entries to the corresponding dates
@@ -72,7 +90,7 @@ export function TrendsSection({ moodData }: TrendsSectionProps) {
       <h2 className="font-reddit text-[28px] lg:text-[32px] leading-[130%] font-bold text-neutral-900 tracking-[-0.3px]">
         Mood and sleep trends
       </h2>
-      <div className="flex h-[312px] items-end gap-4 self-stretch relative min-w-[600px]">
+      <div className="flex h-[312px] items-end gap-4 self-stretch relative min-w-[700px] md:min-w-[600px]">
         <SleepBar />
         <div className="flex h-full items-end gap-4 flex-1 relative">
           {[0, 1, 2, 3, 4].map((index) => (
@@ -82,17 +100,17 @@ export function TrendsSection({ moodData }: TrendsSectionProps) {
             {dates.map((date, index) => (
               <div key={date.toISOString()} className="relative flex flex-col items-center">
                 <div className="absolute bottom-[43px]">
-                  {processedMoodData[index].show && (
+                  {processedMoodData[index].show && processedMoodData[index].data && (
                     <MoodBar 
                       height={processedMoodData[index].height} 
                       color={processedMoodData[index].color} 
                       iconSrc={processedMoodData[index].icon} 
-                      moodData={processedMoodData[index].data ? {
-                        mood: processedMoodData[index].data.mood,
-                        sleep: processedMoodData[index].data.sleep,
-                        journal: processedMoodData[index].data.journal,
-                        tags: processedMoodData[index].data.tags
-                      } : undefined}
+                      moodData={{
+                        mood: processedMoodData[index].data!.mood,
+                        sleep: processedMoodData[index].data!.sleep,
+                        journal: processedMoodData[index].data!.journal,
+                        tags: processedMoodData[index].data!.tags
+                      }}
                       barIndex={index}
                       totalBars={dates.length}
                     />

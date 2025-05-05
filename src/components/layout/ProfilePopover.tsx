@@ -2,7 +2,10 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { SettingsModal } from './SettingsModal';
+import { useUser } from '@/contexts/UserContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ProfilePopoverProps {
   isOpen: boolean;
@@ -11,8 +14,10 @@ interface ProfilePopoverProps {
 
 export function ProfilePopover({ isOpen, onUserImageUpdate }: ProfilePopoverProps) {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const [userName, setUserName] = useState('Lisa Maria');
-  const [userImage, setUserImage] = useState('/assets/images/avatar-lisa.jpg');
+  const [logoutError, setLogoutError] = useState('');
+  const { userName, userImage, updateUserName, updateUserImage } = useUser();
+  const { logOut, currentUser } = useAuth();
+  const router = useRouter();
   
   if (!isOpen) return null;
   
@@ -20,21 +25,37 @@ export function ProfilePopover({ isOpen, onUserImageUpdate }: ProfilePopoverProp
     setIsSettingsModalOpen(true);
   };
   
-  const handleLogout = () => {
-    console.log('Logout clicked');
-    // Add your logout logic here
+  const handleLogout = async () => {
+    try {
+      setLogoutError('');
+      await logOut();
+      router.push('/login');
+    } catch (error: any) {
+      setLogoutError(error.message);
+      console.error('Logout error:', error);
+    }
   };
 
-  const handleSaveSettings = (name: string, image: string) => {
-    setUserName(name);
-    setUserImage(image);
-    
-    // Update the parent component if the callback is provided
-    if (onUserImageUpdate) {
-      onUserImageUpdate(image);
+  const handleSaveSettings = async (name: string, image: string) => {
+    try {
+      // Only update name if it has changed
+      if (name !== userName) {
+        await updateUserName(name);
+      }
+      
+      // Only update image if it has changed
+      if (image !== userImage) {
+        await updateUserImage(image);
+        if (onUserImageUpdate) {
+          onUserImageUpdate(image);
+        }
+      }
+      
+      setIsSettingsModalOpen(false);
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      throw error; // Let the SettingsModal handle the error display
     }
-    
-    // Here you would typically save these to your backend/database
   };
 
   return (
@@ -46,7 +67,7 @@ export function ProfilePopover({ isOpen, onUserImageUpdate }: ProfilePopoverProp
             {userName}
           </p>
           <p className="font-reddit text-[15px] font-normal leading-[140%] tracking-[-0.3px] text-[#9393B7]">
-            lisa@gmail.com
+            {currentUser?.email || 'user@example.com'}
           </p>
         </div>
         
@@ -84,6 +105,11 @@ export function ProfilePopover({ isOpen, onUserImageUpdate }: ProfilePopoverProp
             Logout
           </span>
         </div>
+        
+        {/* Logout Error */}
+        {logoutError && (
+          <p className="text-red-500 text-sm self-stretch text-center">{logoutError}</p>
+        )}
       </div>
 
       {/* Settings Modal */}
