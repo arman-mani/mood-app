@@ -2,6 +2,8 @@
 
 A modern fullstack web application that helps users track their emotional wellbeing, sleep patterns, and personal reflections over time. Built with Next.js, TypeScript, and Tailwind CSS.
 
+![Preview of the Mood App](public/images/preview.jph)
+
 ## Live Demo
 
 Visit the live application at: [https://moody-peach.vercel.app/](https://moody-peach.vercel.app/). You can create an account quickly with any email address as long as it follows the correct format and start tracking your moods!
