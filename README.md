@@ -1,6 +1,10 @@
 # Mood Tracking App
 
-A modern web application that helps users track their emotional wellbeing, sleep patterns, and personal reflections over time. Built with Next.js, TypeScript, and Tailwind CSS.
+A modern fullstack web application that helps users track their emotional wellbeing, sleep patterns, and personal reflections over time. Built with Next.js, TypeScript, and Tailwind CSS.
+
+## Live Demo
+
+Visit the live application at: [https://moody-peach.vercel.app/](https://moody-peach.vercel.app/). You can create an account quickly with any email address as long as it follows the correct format and start tracking your moods!
 
 ## Features
 
@@ -26,67 +30,4 @@ A modern web application that helps users track their emotional wellbeing, sleep
 - **API Layer**: Next.js API routes with secure authentication
 - **Image Processing**: Client-side image optimization
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ 
-- npm or pnpm
-- MongoDB database
-- Firebase project with Authentication enabled
-
-### Development Setup
-
-1. Clone the repository
-```bash
-git clone https://github.com/yourusername/mood-app.git
-cd mood-app
-```
-
-2. Install dependencies
-```bash
-npm install
-# or
-pnpm install
-```
-
-3. Configure Environment Variables
-Create a `.env.local` file based on `.env.example` (see Environment Setup section below)
-
-4. Start Development Server
-```bash
-npm run dev
-# or
-pnpm dev
-```
-
-The development server will be available at [http://localhost:3000](http://localhost:3000)
-
-## Environment Setup
-
-For security reasons, environment variables are not shared publicly. You'll need to:
-
-1. Create a `.env.example` file in your project root (see below)
-2. Set up your own Firebase project and MongoDB instance
-3. Configure security rules for Firebase
-4. Set up proper authentication mechanisms
-
-Contact the project maintainers for detailed setup instructions.
-
-## Security Measures
-
-This application implements several security best practices:
-
-- Secure user authentication
-- API rate limiting
-- Request validation
-- CORS protection
-- Environment variable validation
-- Data encryption
-- Secure image handling
-- Database access controls
-
-## Production Deployment
-
-For production deployment guidelines and security considerations, please contact the project maintainers.
 

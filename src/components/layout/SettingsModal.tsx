@@ -162,11 +162,9 @@ export function SettingsModal({
   return (
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/50 p-4 overflow-y-auto"
-      onClick={handleClose}
     >
       <div 
         className="relative flex w-[335px] md:w-full md:max-w-[600px] flex-col items-start gap-[24px] md:gap-[32px] rounded-[16px] bg-gradient-custom p-[40px_20px] md:p-[48px_40px] shadow-[0px_8px_16px_0px_rgba(32,37,41,0.08)] overflow-y-auto max-h-[90vh] mx-auto my-[20px] md:my-[80px]"
-        onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
         <button 
