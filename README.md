@@ -2,7 +2,7 @@
 
 A modern fullstack web application that helps users track their emotional wellbeing, sleep patterns, and personal reflections over time. Built with Next.js, TypeScript, and Tailwind CSS.
 
-![Preview of the Mood App](public/images/preview.jpg)
+![Preview of the Mood App](public/images/Preview.jpg)
 
 ## Live Demo
 
