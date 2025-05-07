@@ -97,7 +97,7 @@ export const useMoodData = () => {
     // Determine comparison with previous moods
     let comparison: 'increase' | 'same' | 'decrease' = 'same';
     
-    // If we have more than 10 entries, we can compare current 5 with previous 5
+    // If  more than 10 entries, then we can compare current 5 with previous 5
     if (moodEntries.length >= 10) {
       const previousEntries = [...moodEntries]
         .sort((a, b) => b.date.getTime() - a.date.getTime())
@@ -253,7 +253,7 @@ export const useMoodData = () => {
       console.log('Successfully saved mood:', savedLog);
     } catch (error) {
       console.error('Error saving mood:', error);
-      // Optionally, you could revert the local state here if the save failed
+      // Optionally, revert the local state here if the save failed
     }
   };
 

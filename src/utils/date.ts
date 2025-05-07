@@ -10,7 +10,7 @@ export const isSameDay = (date1: Date, date2: Date): boolean => {
 };
 
 /**
- * Format the current date in a readable format
+ *  current date in a readable format
  */
 export const formatCurrentDate = (): string => {
   const date = new Date();

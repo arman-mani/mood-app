@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema<IUser>({
   timestamps: true
 });
 
-// Create indexes for efficient querying
+// Create indexes for querying
 userSchema.index({ firebaseUid: 1 });
 userSchema.index({ email: 1 });
 

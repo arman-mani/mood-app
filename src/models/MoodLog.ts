@@ -20,7 +20,7 @@ const moodLogSchema = new mongoose.Schema<IMoodLog>({
   timestamps: true
 });
 
-// Create compound index for efficient querying
+//  compound index for efficient querying
 moodLogSchema.index({ userId: 1, date: -1 });
 
 export const MoodLog = mongoose.models.MoodLog || mongoose.model<IMoodLog>('MoodLog', moodLogSchema); 
